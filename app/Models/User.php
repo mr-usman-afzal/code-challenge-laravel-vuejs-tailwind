@@ -53,4 +53,14 @@ class User extends Authenticatable
     {
         return $this->role === static::ROLE_ADMIN;
     }
+
+    /**
+     * @param mixed $query
+     *
+     * @return void
+     */
+    public function scopeAdmins($query) : void
+    {
+        $query->where('role', static::ROLE_ADMIN);
+    }
 }
