@@ -8,6 +8,14 @@ use App\Models\Contact;
 class ContactController extends Controller
 {
     /**
+     * Class constructor
+     */
+    public function __construct()
+    {
+        $this->middleware(['auth:sanctum', 'verifyIsAdmin'], ['only' => 'destroy']);
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
