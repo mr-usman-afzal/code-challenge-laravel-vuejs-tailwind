@@ -20,7 +20,6 @@ class Contact extends Model
         parent::boot();
         self::created(function (Contact $record) {
             User::admins()->get()->each(function ($admin) use ($record) {
-                $admin->notify(new ContactCreatedNotification($record));
             });
         });
     }
