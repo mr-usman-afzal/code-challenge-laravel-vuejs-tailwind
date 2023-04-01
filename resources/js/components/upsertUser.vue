@@ -24,11 +24,14 @@
                     </label>
                     <input
                       v-model="firstName"
-                      class="shadow appearance-none border rounded w-full py-2 px-8 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      class="shadow appearance-none border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="first-name"
                       type="text"
                       placeholder="Enter first name"
                     />
+                    <div v-if="validation.firstName" class="mt-2 text-xs text-red-500">
+                      This field is required
+                    </div>
                   </div>
                   <div class="mb-4 w-full sm:w-5/12 sm:ml-4">
                     <label class="block text-gray-700 font-bold mb-2" for="last-name">
@@ -36,11 +39,14 @@
                     </label>
                     <input
                       v-model="lastName"
-                      class="shadow appearance-none border rounded w-full py-2 px-8 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      class="shadow appearance-none border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="last-name"
                       type="text"
                       placeholder="Enter last name"
                     />
+                    <div v-if="validation.lastName" class="mt-2 text-xs text-red-500">
+                      This field is required
+                    </div>
                   </div>
                   <div class="mb-4 w-full sm:w-5/12 sm:ml-1">
                     <label class="block text-gray-700 font-bold mb-2" for="last-name">
@@ -48,7 +54,7 @@
                     </label>
                     <input
                       v-model="email"
-                      class="shadow appearance-none border rounded w-full py-2 px-8 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      class="shadow appearance-none border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="last-name"
                       type="text"
                       placeholder="Enter last name"
@@ -60,7 +66,7 @@
                     </label>
                     <input
                       v-model="phone"
-                      class="shadow appearance-none border rounded w-full py-2 px-8 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      class="shadow appearance-none border rounded w-full py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       id="last-name"
                       type="text"
                       placeholder="Enter last name"
@@ -74,14 +80,14 @@
             <button
               @click="onSubmit"
               type="button"
-              class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
+              class="rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
             >
-              submit
+              Submit
             </button>
             <button
               @click="onClose"
               type="button"
-              class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+              class="mt-3 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
             >
               Cancel
             </button>
@@ -102,6 +108,10 @@ export default {
       lastName: null,
       email: null,
       phone: null,
+      validation: {
+        firstName: false,
+        lastName: false,
+      },
     }
   },
   props: {
@@ -115,49 +125,69 @@ export default {
   },
   methods: {
     async onSubmit() {
-      if (this.editItem == 'add') {
-        const payload = {
-          first_name: this.firstName,
-          last_name: this.lastName,
-          email: this.email,
-          phone: this.phone,
+      this.resetValidation()
+      this.checkValidation()
+
+      if (this.firstName && this.lastName) {
+        if (!this.editItem) {
+          // * create new record
+          const payload = {
+            first_name: this.firstName,
+            last_name: this.lastName,
+            email: this.email,
+            phone: this.phone,
+          }
+
+          await userService.addUser(payload)
+          this.onClose()
+        } else {
+          // * update existing record
+          const payload = {
+            first_name: this.firstName,
+            last_name: this.lastName,
+            email: this.email,
+            phone: this.phone,
+          }
+
+          await userService.editUser(this.editItem.id, payload)
+          this.onClose()
         }
-
-        await userService.addUser(payload)
-        this.onClose()
-      } else {
-        const payload = {
-          first_name: this.firstName,
-          last_name: this.lastName,
-          email: this.email,
-          phone: this.phone,
-        }
-
-        await userService.editUser(this.editItem.id, payload)
-
-        this.onClose()
       }
     },
 
     onClose() {
-      ;(this.firstName = null), (this.lastName = null), (this.email = null), (this.phone = null)
-      const close = false
+      this.firstName = null
+      this.lastName = null
+      this.email = null
+      this.phone = null
+      this.resetValidation()
 
       this.$emit('on-close', { close })
+    },
+    checkValidation() {
+      if (!this.firstName) this.validation.firstName = true
+      if (!this.lastName) this.validation.lastName = true
+    },
+    resetValidation() {
+      this.validation.firstName = false
+      this.validation.lastName = false
     },
   },
 
   watch: {
     value: {
       immediate: true,
-      handler(val) {
-        const { first_name, last_name, phone, email } = this.editItem
-        ;(this.firstName = first_name),
-          (this.lastName = last_name),
-          (this.email = email),
-          (this.phone = phone)
+      handler() {
+        if (this.editItem) {
+          const { first_name, last_name, phone, email } = this.editItem
+          this.firstName = first_name
+          this.lastName = last_name
+          this.email = email
+          this.phone = phone
+        }
       },
     },
   },
 }
 </script>
+<style scoped></style>

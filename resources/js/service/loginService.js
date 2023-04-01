@@ -6,7 +6,8 @@ export default {
       const { data, status } = response.data
       return { data, status }
     } catch (error) {
-      console.log(error)
+      const { errors } = error.response.data
+      return { status: error.status, errorMsg: errors?.email[0] }
     }
   },
 }

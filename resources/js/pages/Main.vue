@@ -8,7 +8,7 @@
               Users:
               <button
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1.5 px-5 rounded ml-4"
-                @click="openModal('add')"
+                @click="openModal()"
               >
                 + Add
               </button>
@@ -65,7 +65,6 @@
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    // $admin->(new ContactCreatedNotification($record));
                     <div class="text-sm font-medium text-gray-900">
                       {{ user.last_name }}
                     </div>
@@ -133,7 +132,7 @@ export default {
       property: '',
       users: null,
       showEntryDialogue: false,
-      editItem: [],
+      editItem: null,
     }
   },
   methods: {
@@ -142,8 +141,8 @@ export default {
       this.users = response
     },
 
-    openModal(val) {
-      this.editItem = val
+    openModal() {
+      this.editItem = null
       this.showEntryDialogue = true
     },
 
