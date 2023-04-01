@@ -3,16 +3,14 @@
     <div class="flex justify-center">
       <div class="w-full max-w-md">
         <div class="bg-white overflow-hidden shadow rounded-lg">
-          <div class="px-4 py-5 sm:px-6 bg-gray-50">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">
-              Users:
-              <button
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1.5 px-5 rounded ml-4"
-                @click="openModal()"
-              >
-                + Add
-              </button>
-            </h3>
+          <div class="px-4 py-5 sm:px-6 bg-gray-50 flex w-100">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Users</h3>
+            <button
+              class="text-sm bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1.5 px-5 rounded ml-auto"
+              @click="openModal()"
+            >
+              Add User
+            </button>
           </div>
           <div class="border-t border-gray-200">
             <table class="min-w-full divide-y divide-gray-200">
@@ -84,7 +82,7 @@
                       {{ user.created_at }}
                     </div>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <td class="flex px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <a
                       href="#"
                       class="text-indigo-600 hover:text-indigo-900"
@@ -95,8 +93,9 @@
                       href="#"
                       class="text-red-600 hover:text-red-900 ml-4"
                       @click="onRemove(user.id)"
-                      >Delete</a
                     >
+                      Delete
+                    </a>
                   </td>
                 </tr>
               </tbody>
@@ -110,8 +109,11 @@
       v-if="showEntryDialogue"
       :user-modal="showEntryDialogue"
       :edit-item="editItem"
-      @on-close="handleData"
+      @onClose="handleData"
     />
+    <success-error-popup :visible="successMessageVisible">
+      {{ successMessage }}
+    </success-error-popup>
   </div>
 </template>
 
@@ -133,6 +135,8 @@ export default {
       users: null,
       showEntryDialogue: false,
       editItem: null,
+      successMessageVisible: false,
+      successMessage: '',
     }
   },
   methods: {
@@ -141,20 +145,38 @@ export default {
       this.users = response
     },
 
-    openModal() {
-      this.editItem = null
+    openModal(val) {
+      this.editItem = val
       this.showEntryDialogue = true
     },
 
     handleData(data) {
-      const { colse } = data
       this.getUserData()
-      this.showEntryDialogue = colse
+      this.showEntryDialogue = false
+      if (data.message) this.showSuccessMessage(data.message)
     },
 
     async onRemove(id) {
-      const response = await userService.onRemove(id)
+      const { status, message } = await userService.onRemove(id)
+
+      if (status) {
+        this.successMessage = message
+        this.successMessageVisible = true
+        this.resetSuccessMessage()
+      }
       this.getUserData()
+    },
+
+    showSuccessMessage(message) {
+      this.successMessage = message
+      this.successMessageVisible = true
+      this.resetSuccessMessage()
+    },
+    resetSuccessMessage() {
+      setTimeout(() => {
+        this.successMessage = ''
+        this.successMessageVisible = false
+      }, 2000) // 2 seconds
     },
   },
 

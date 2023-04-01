@@ -11,9 +11,9 @@ export default {
 
   async addUser(payload) {
     try {
-      const response = await axios.post('http://0.0.0.0/api/contacts', payload)
+      const { data } = await axios.post('http://0.0.0.0/api/contacts', payload)
 
-      return response.status
+      return data
     } catch (error) {
       console.log(error)
     }
@@ -21,9 +21,9 @@ export default {
 
   async editUser(id, payload) {
     try {
-      const response = await axios.put(`http://0.0.0.0/api/contacts/${id}`, payload)
+      const { data } = await axios.put(`http://0.0.0.0/api/contacts/${id}`, payload)
 
-      return response.status
+      return data
     } catch (error) {
       console.log(error)
     }
@@ -36,9 +36,8 @@ export default {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       }
-      const response = await axios.delete(`http://0.0.0.0/api/contacts/${id}`, config)
-
-      return response.status
+      const { data } = await axios.delete(`http://0.0.0.0/api/contacts/${id}`, config)
+      return data
     } catch (error) {
       return error.response.status
     }
