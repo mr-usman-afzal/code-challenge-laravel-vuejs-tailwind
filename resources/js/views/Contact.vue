@@ -2,31 +2,31 @@
     <div>
         <div>
             <div class="flex justify-center background-div align-top h-screen">
-                <div class="w-8/12 pt-4 max-w-md h-screen ">
-                    <div class="flex justify-end pt-10 pb-10">
-                        <button
-                            class="text-sm bg-green-600 hover:bg-green-700 text-white font-semibold py-1.5 px-5 rounded ml-auto"
-                            @click="logout()"
-                        >
-                            Logout
-                        </button>
-                    </div>
-
+                <div class="lg:w-7/12  w-full  mt-20 mb-20 max-w-md h-screen overflow-y-auto ">
                     <div class=" overflow-hidden shadow rounded-lg ">
-                        <div class="px-4 py-5 sm:px-6  flex w-100 bg-blue-200">
+                        <div class="px-4 py-5 sm:px-6  flex justify-between w-100 bg-blue-200">
                             <h3 class="text-lg leading-6 font-medium text-gray-900">Contacts</h3>
+                            <div class="flex gap-3">
                             <button
                                 class="text-sm bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1.5 px-5 rounded ml-auto"
                                 @click="openModal()"
                             >
                                 Add Contact
                             </button>
+                            <button
+                                class="text-sm bg-green-600 hover:bg-green-700 text-white font-semibold py-1.5 px-5 rounded ml-auto"
+                                @click="logout()"
+                            >
+                                Logout
+                            </button>
+                            </div>
                         </div>
                         <div class="border-t border-gray-200">
                             <div v-if="users.length<=0" class="flex max-w-full justify-center p-8">
                                 <h4>No record found!!!</h4>
                             </div>
-                            <table v-else class="min-w-full divide-y divide-gray-200">
+                            <div v-else class="w-full overflow-x-auto">
+                            <table  class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-100 h-16">
                                 <tr>
                                     <th
@@ -57,13 +57,6 @@
                                         scope="col"
                                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                     >
-                                        Created Date
-                                    </th>
-
-                                    <th
-                                        scope="col"
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                    >
                                         Actions
                                     </th>
                                 </tr>
@@ -71,12 +64,12 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="(user, index) in users" :key="user.id">
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">
+                                        <div class="text-sm font-light ">
                                             {{ user.first_name }}
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">
+                                        <div class="text-sm font-light">
                                             {{ user.last_name }}
                                         </div>
                                     </td>
@@ -90,11 +83,7 @@
                                             {{ user.phone }}
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm text-gray-500">
-                                            {{ user.created_at }}
-                                        </div>
-                                    </td>
+
                                     <td class="flex px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <a
                                             href="#"
@@ -113,6 +102,7 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            </div>
                         </div>
                     </div>
                 </div>

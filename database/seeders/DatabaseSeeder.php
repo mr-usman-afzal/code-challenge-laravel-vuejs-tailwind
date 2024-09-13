@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::factory()->create([
+        $this->call(ContactSeeder::class);
+
+        User::factory()->create ([
             'name' => fake()->name(),
             'email' => 'admin@admin.com',
             'email_verified_at' => now(),

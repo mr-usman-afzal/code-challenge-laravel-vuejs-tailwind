@@ -16,7 +16,10 @@ class ContactObserver
      */
     public function created(Contact $contact)
     {
-        Mail::to('admin@admin.com')->send(new ContactCreated($contact));
+
+
+
+//        Mail::to('rohanjalil.fino@gmail.com')->send(new ContactCreated($contact));
     }
 
     /**
