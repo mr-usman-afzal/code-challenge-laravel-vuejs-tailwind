@@ -11,6 +11,16 @@ use App\utilities\ResponseHelper;
 
 class ContactController extends Controller
 {
+
+    /**
+     * Class constructor
+     */
+    public function __construct()
+    {
+        $this->middleware('isAdmin')->only('destroy');
+    }
+
+
     /**
      * Display a listing of the resource.
      *
