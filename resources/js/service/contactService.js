@@ -39,7 +39,7 @@ export default {
             const { data } = await axios.delete(`http://127.0.0.1:8000/api/contacts/${id}`, config)
             return data
         } catch (error) {
-            return error.response.status
+            return error.response.data
         }
     },
 }

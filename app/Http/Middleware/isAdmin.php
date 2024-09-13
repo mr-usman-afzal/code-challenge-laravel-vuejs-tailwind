@@ -25,7 +25,7 @@ class isAdmin
 
             return response()->json([
                 'status' => false,
-                'message' => 'You are unauthorized to perform this action.'
+                'message' => 'not allowed'
             ], 401);
         }
     }

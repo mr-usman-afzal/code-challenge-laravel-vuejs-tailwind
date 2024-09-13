@@ -17,7 +17,7 @@ class ContactController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('isAdmin')->only('destroy');
+        $this->middleware(['auth:sanctum', 'isAdmin'], ['only' => 'destroy']);
     }
 
 
