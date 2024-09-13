@@ -7,6 +7,7 @@ use App\Models\Contact;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\utilities\ResponseHelper;
 
 class ContactController extends Controller
 {
@@ -19,27 +20,10 @@ class ContactController extends Controller
     {
         try {
             $contacts = Contact::all();
-            return response()->json([
-                'success' => true,
-                'message' => 'Contacts retrieved successfully',
-                'data' => $contacts
-            ], Response::HTTP_OK);
+            return ResponseHelper::success('Contacts retrieved successfully', $contacts);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return ResponseHelper::failure($e->getMessage());
         }
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -52,16 +36,9 @@ class ContactController extends Controller
     {
         try {
             $contact = Contact::create($request->validated());
-            return response()->json([
-                'success' => true,
-                'message' => 'Contact created successfully',
-                'data' => $contact
-            ], Response::HTTP_CREATED);
+            return ResponseHelper::success('Contact created successfully', $contact, Response::HTTP_CREATED);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return ResponseHelper::failure($e->getMessage());
         }
     }
 
@@ -76,16 +53,6 @@ class ContactController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -97,11 +64,7 @@ class ContactController extends Controller
     public function update(ContactRequest $request, Contact $contact): JsonResponse
     {
         $contact->update($request->validated());
-        return response()->json([
-            'success' => true,
-            'message' => 'Contact updated successfully',
-            'data' => $contact
-        ], Response::HTTP_OK);
+        return ResponseHelper::success('Contact updated successfully', $contact);
     }
 
     /**
@@ -114,15 +77,9 @@ class ContactController extends Controller
     {
         try {
             $contact->delete();
-            return response()->json([
-                'success' => true,
-                'message' => 'Contact deleted successfully'
-            ], Response::HTTP_NO_CONTENT);
+            return ResponseHelper::success('Contact deleted successfully', null, Response::HTTP_NO_CONTENT);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return ResponseHelper::failure($e->getMessage());
         }
     }
 }
